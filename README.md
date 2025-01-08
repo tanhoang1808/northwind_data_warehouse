@@ -137,6 +137,6 @@ This project is built based on the `Northwind` dataset and represents `Kimball's
 
 ### Fact and Dimension Representation:
 
-### The Fact-Dimension model can be represented in the physical layer as shown below:
+### The Fact-Dimension model can be represented in the diagram as shown below:
 
 ![Fact-Dimension Model](assets/northwind_physical.png)
