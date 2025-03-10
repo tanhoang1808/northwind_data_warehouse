@@ -2,9 +2,7 @@
 
 with source as(
     SELECT
-    fi.CUSTOMER_ORDER_ID,
-    fi.INVENTORY_PURCHASE_ORDER_ID,
-    fi.INVENTORY_TRANSACTIONS_ID,
+    fi.INVENTORY_TRANSACTIONS_ID,    
     dp.PRODUCT_ID,
     dp.PRODUCT_NAME,
     dp.STANDARD_COST,
@@ -18,12 +16,13 @@ with source as(
     fi.SUPPLIER_COMPANY,
     fi.SUPPLIER_FIRST_NAME,
     fi.SUPPLIER_LAST_NAME,
+    fi.inventory_quantity,
     fi.TRANSACTION_CREATED_DATE,
     fi.TRANSACTION_MODIFIED_DATE,
     fi.TYPE_NAME,
     fi.COMMENTS
-    from {{ref("fact_inventory")}} fi
-    LEFT JOIN {{ref('dim_products')}} dp
+    from {{ref("fact_inventory",v='1')}} fi
+    LEFT JOIN {{ref('dim_products',v='1')}} dp
     ON dp.product_id = fi.product_id
     
 )

@@ -1,7 +1,9 @@
 {{
   config(
     materialized = 'incremental',
-    on_schema_change = 'fail'
+    on_schema_change = 'fail',
+    tags = 'fi',
+    unique_key = 'inventory_transactions_id'
     )
 }}
 
@@ -16,6 +18,7 @@ with source as (
     it.transaction_modified_date,
     p.product_id,
     p.product_name,
+    it.quantity as inventory_quantity,
     it.purchase_order_id as inventory_purchase_order_id,
     po.purchase_order_id as purchase_order_id,
     it.customer_order_id,
@@ -52,9 +55,15 @@ where
     AND transaction_created_date < '{{ var("end_date") }}'
     AND row_number = 1
   {% else %}
-    transaction_created_date > (SELECT MAX(transaction_created_date) FROM {{ this }})
+    transaction_created_date > DATEADD(day, -1, (SELECT MAX(transaction_created_date) FROM {{ this }}))
     AND row_number = 1
   {% endif %}
 {% else %}
   1=1
 {% endif %}
+
+  {%if target.name == 'dev'%}
+
+    {{limit_ten_row()}}
+
+  {%endif%}

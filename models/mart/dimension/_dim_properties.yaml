@@ -1,0 +1,113 @@
+version: 2
+
+models:
+  - name: dim_customers
+    latest_version: 1
+    columns:
+      - name: customer_id
+        description: "Unique ID"
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - unique
+          - not_null
+      - name: email
+        tests:
+          - is_email_valid
+    versions:
+      - v: 1
+
+  - name: dim_products
+    latest_version: 1
+    columns:
+      - name: product_id
+        description: "Unique ID"
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - unique
+          - not_null
+      - name: supplier_id
+        tests:
+          - relationships:
+              to: ref('northwind_stg__suppliers')
+              field: supplier_id
+      - name: standard_cost
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - greater_than_zero
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: float
+      - name: list_price
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: float
+    versions:
+      - v: 1
+
+  - name: dim_date
+    latest_version: 1
+    versions:
+      - v: 1
+
+  - name: dim_employees
+    latest_version: 1
+    columns:
+      - name: employee_id
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - dbt_expectations.expect_column_values_to_not_be_null
+      - name: company
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: varchar
+          - dbt_expectations.expect_column_to_exist
+      - name: last_name
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: first_name
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: email_address
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - is_email_valid
+      - name: job_title
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: business_phone
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: home_phone
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: mobile_phone
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: fax_number
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: address
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: city
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: state_province
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: zip_postal_code
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: country_region
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: web_page
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: notes
+        tests:
+          - dbt_expectations.expect_column_to_exist
+      - name: attachments
+        tests:
+          - dbt_expectations.expect_column_to_exist
+    versions:
+      - v: 1

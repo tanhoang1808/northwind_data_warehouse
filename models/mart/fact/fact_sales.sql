@@ -1,7 +1,9 @@
 {{
   config(
     materialized = 'incremental',
-    on_schema_change = 'fail'
+    on_schema_change = 'fail',
+    tags = 'fs',
+    unique_key = 'sales_unique_key'
   )
 }}
 
@@ -17,7 +19,7 @@ with source as (
     od.unit_price,
     od.discount,
     od.status_id,
-    od.date_allocated,
+    TO_TIMESTAMP_NTZ(od.date_allocated) as date_allocated ,
     o.order_date,
     o.shipped_date,
     o.paid_date
@@ -44,9 +46,12 @@ where
     AND paid_date < '{{ var("end_date") }}'
     AND row_number = 1
   {% else %}
-    paid_date > (SELECT MAX(paid_date) FROM {{ this }})
+    paid_date > DATEADD(day,-1,(SELECT MAX(paid_date) FROM {{ this }}))
     AND row_number = 1
   {% endif %}
 {% else %}
   1=1
 {% endif %}
+
+
+

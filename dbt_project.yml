@@ -43,11 +43,13 @@ models:
       fact:
         +materialized: table
     obt:
+      +post-hook:
+        - "GRANT SELECT ON {{this}} TO ROLE ANALYSIS"
       +materialized: incremental
       +enabled: true
       +schema: obt_northwind
 
 seeds:
   northwind_project_dbt_ytb:
-    database: northwind
+    +database: northwind
     +schema: NORTHWIND_RAW

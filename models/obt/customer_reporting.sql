@@ -33,14 +33,30 @@ with source as (
 	fpo.PAYMENT_METHOD ,
 	fpo.APPROVED_BY ,
 	fpo.APPROVED_DATE ,
-	fpo.SUBMITTED_BY
+	fpo.SUBMITTED_BY,
+	ROW_NUMBER() over( partition by 
+	fpo.unique_key,
+	dc.last_name,
+	dc.first_name,
+	fpo.purchase_order_id,
+	dp.product_id,
+	fpo.date_received,
+	fpo.supplier_id,
+	fpo.created_by,
+	fpo.creation_date,
+	fpo.approved_date
+	order by creation_date) as row_number
 	
-    from {{ref('fact_purchase_order')}} fpo
-    JOIN {{ref('dim_customers')}} dc
+    from {{ref('fact_purchase_order',v='1')}} fpo
+    JOIN {{ref('dim_customers',v='1')}} dc
     ON fpo.customer_id = dc.customer_id
-    JOIN {{ref('dim_products')}} dp
+    JOIN {{ref('dim_products',v='1')}} dp
     ON fpo.product_id = dp.product_id
     
 )
 
-select * from source
+select 
+* exclude row_number
+from source
+where row_number = 1 
+ORDER BY creation_date

@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: product_inventory
+    latest_version: 1
+    description: '{{ (doc("product_inventory")) }}'
+    versions:
+      - v: 1
+        config:
+          alias: product_inventory
+
+  - name: customer_reporting
+    latest_version: 1
+    description: '{{ (doc("customer_reporting")) }}'
+    versions:
+      - v: 1
+        config:
+          alias: customer_reporting
+  - name: sales_overview
+    latest_version: 1
+    description: '{{ (doc("sales_overview")) }}'
+    versions:
+      - v: 1
+        config:
+          alias: sales_overview
